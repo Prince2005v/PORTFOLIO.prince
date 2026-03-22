@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animated background animation */
+@keyframes mesh-pulse {
+  0% { transform: scale(1) translate(0%, 0%); opacity: 0.15; }
+  33% { transform: scale(1.1) translate(2%, 2%); opacity: 0.2; }
+  66% { transform: scale(0.9) translate(-2%, 1%); opacity: 0.18; }
+  100% { transform: scale(1) translate(0%, 0%); opacity: 0.15; }
+}
+
+/* Custom radial gradient background for the whole page */
+.bg-mesh {
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-mesh::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(222, 100%, 15%, 0.25) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(263, 100%, 15%, 0.25) 0, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(280, 100%, 15%, 0.25) 0, transparent 50%),
+    radial-gradient(at 0% 100%, hsla(217, 100%, 15%, 0.25) 0, transparent 50%);
+  animation: mesh-pulse 15s ease-in-out infinite alternate;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
