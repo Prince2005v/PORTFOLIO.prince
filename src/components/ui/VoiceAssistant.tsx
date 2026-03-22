@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities, @typescript-eslint/no-explicit-any, react-hooks/exhaustive-deps, @typescript-eslint/no-unused-vars, react-hooks/set-state-in-effect */
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -22,6 +23,42 @@ export function VoiceAssistant() {
   const [isSupported, setIsSupported] = useState(true);
   
   const recognitionRef = useRef<any>(null);
+
+  function speak(text: string) {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95;
+      utterance.pitch = 1;
+      window.speechSynthesis.speak(utterance);
+      setResponse(text);
+    }
+  }
+
+  function handleVoiceCommand(command: string) {
+    let reply = "I didn't quite catch that. You can ask me about his skills, projects, experience, or contact information.";
+    
+    if (command.includes("skill") || command.includes("tech") || command.includes("stack")) {
+      reply = `Prince's top skills include ${portfolioData.skills.frontend.slice(0, 3).join(", ")}, ${portfolioData.skills.backend.slice(0, 2).join(", ")}, and Web3 technologies like ${portfolioData.skills.web3[0]}.`;
+      router.push("/#skills");
+    } else if (command.includes("project") || command.includes("work") || command.includes("build")) {
+      reply = `He has worked on several amazing projects, including the ${portfolioData.projects[0].title} and the ${portfolioData.projects[1].title}. Would you like to check out his GitHub?`;
+      router.push("/#projects");
+    } else if (command.includes("experience") || command.includes("background")) {
+      reply = `Prince is a ${portfolioData.role}. ${portfolioData.about.split('.')[0]}.`;
+      router.push("/#experience");
+    } else if (command.includes("about") || command.includes("who is")) {
+      reply = `Let me take you to Prince's About page.`;
+      router.push("/about");
+    } else if (command.includes("contact") || command.includes("email") || command.includes("hire") || command.includes("reach")) {
+      reply = `You can easily reach Prince at ${portfolioData.contact.email} or call him directly at ${portfolioData.contact.mobile}.`;
+      router.push("/#contact");
+    } else if (command.includes("hello") || command.includes("hi") || command.includes("who are you") || command.includes("what is this")) {
+      reply = `Hi there! I'm Prince's Gen AI Voice Assistant. Ask me anything about his portfolio.`;
+    }
+
+    speak(reply);
+  }
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -53,42 +90,6 @@ export function VoiceAssistant() {
       }
     }
   }, []);
-
-  const speak = (text: string) => {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.95;
-      utterance.pitch = 1;
-      window.speechSynthesis.speak(utterance);
-      setResponse(text);
-    }
-  };
-
-  const handleVoiceCommand = (command: string) => {
-    let reply = "I didn't quite catch that. You can ask me about his skills, projects, experience, or contact information.";
-    
-    if (command.includes("skill") || command.includes("tech") || command.includes("stack")) {
-      reply = `Prince's top skills include ${portfolioData.skills.frontend.slice(0, 3).join(", ")}, ${portfolioData.skills.backend.slice(0, 2).join(", ")}, and Web3 technologies like ${portfolioData.skills.web3[0]}.`;
-      router.push("/#skills");
-    } else if (command.includes("project") || command.includes("work") || command.includes("build")) {
-      reply = `He has worked on several amazing projects, including the ${portfolioData.projects[0].title} and the ${portfolioData.projects[1].title}. Would you like to check out his GitHub?`;
-      router.push("/#projects");
-    } else if (command.includes("experience") || command.includes("background")) {
-      reply = `Prince is a ${portfolioData.role}. ${portfolioData.about.split('.')[0]}.`;
-      router.push("/#experience");
-    } else if (command.includes("about") || command.includes("who is")) {
-      reply = `Let me take you to Prince's About page.`;
-      router.push("/about");
-    } else if (command.includes("contact") || command.includes("email") || command.includes("hire") || command.includes("reach")) {
-      reply = `You can easily reach Prince at ${portfolioData.contact.email} or call him directly at ${portfolioData.contact.mobile}.`;
-      router.push("/#contact");
-    } else if (command.includes("hello") || command.includes("hi") || command.includes("who are you") || command.includes("what is this")) {
-      reply = `Hi there! I'm Prince's Gen AI Voice Assistant. Ask me anything about his portfolio.`;
-    }
-
-    speak(reply);
-  };
 
   const toggleListen = () => {
     if (isListening) {

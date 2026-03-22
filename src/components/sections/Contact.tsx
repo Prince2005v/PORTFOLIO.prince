@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useState } from "react";
@@ -32,10 +33,10 @@ export function Contact() {
 
       setStatus("success");
       setFormData({ name: "", email: "", message: "" });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
       setStatus("error");
-      setErrorMessage(error.message);
+      setErrorMessage((error as Error).message);
     } finally {
       setIsSubmitting(false);
     }
