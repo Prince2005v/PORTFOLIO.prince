@@ -23,8 +23,27 @@ import { cn } from "@/lib/utils";
 import { QRCodeSVG } from "qrcode.react";
 import { portfolioData } from "@/data/portfolio";
 
-// Initial state for resume
-const initialResume = {
+interface ResumeItem {
+  id: string;
+  [key: string]: string;
+}
+
+interface ResumeData {
+  personalInfo: {
+    name: string;
+    email: string;
+    phone: string;
+    linkedin: string;
+    portfolio: string;
+    summary: string;
+  };
+  experience: ResumeItem[];
+  education: ResumeItem[];
+  projects: ResumeItem[];
+  skills: string[];
+}
+
+const initialResume: ResumeData = {
   personalInfo: {
     name: "Prince Verma",
     email: "8567prince@gmail.com",
@@ -87,7 +106,7 @@ export default function ResumeMaker() {
   };
 
   const updatePersonalInfo = (field: string, value: string) => {
-    setResumeData(prev => ({
+    setResumeData((prev: ResumeData) => ({
       ...prev,
       personalInfo: { ...prev.personalInfo, [field]: value }
     }));
@@ -99,23 +118,23 @@ export default function ResumeMaker() {
       education: { id: Date.now().toString(), institution: "", degree: "", duration: "", score: "" },
       projects: { id: Date.now().toString(), name: "", tech: "", desc: "" }
     };
-    setResumeData(prev => ({
+    setResumeData((prev: ResumeData) => ({
       ...prev,
       [section]: [...prev[section], defaultItems[section]]
     }));
   };
 
   const removeItem = (section: 'experience' | 'education' | 'projects', id: string) => {
-    setResumeData(prev => ({
+    setResumeData((prev: ResumeData) => ({
       ...prev,
-      [section]: prev[section].filter((item: any) => item.id !== id)
+      [section]: prev[section].filter((item: ResumeItem) => item.id !== id)
     }));
   };
 
   const updateArrayItem = (section: 'experience' | 'education' | 'projects', id: string, field: string, value: string) => {
-    setResumeData(prev => ({
+    setResumeData((prev: ResumeData) => ({
       ...prev,
-      [section]: prev[section].map((item: any) => 
+      [section]: prev[section].map((item: ResumeItem) => 
         item.id === id ? { ...item, [field]: value } : item
       )
     }));
