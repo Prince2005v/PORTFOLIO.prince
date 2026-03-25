@@ -6,12 +6,20 @@ import Link from "next/link";
 import { Github, Linkedin, Twitter, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
+
+const ConnectButton = dynamic(
+  () => import("@rainbow-me/rainbowkit").then((mod) => mod.ConnectButton),
+  { ssr: false }
+);
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -21,6 +29,7 @@ export function Navbar() {
 
   const navLinks = [
     { name: "About", href: "/about" },
+    { name: "Resume Maker", href: "/resume-maker" },
     { name: "Skills", href: "/#skills" },
     { name: "Projects", href: "/#projects" },
     { name: "Experience", href: "/#experience" },
@@ -45,9 +54,12 @@ export function Navbar() {
             <Link
               key={link.name}
               href={link.href}
-              className="text-sm font-medium text-white/70 hover:text-white transition-colors"
+              className="text-sm font-medium text-white/70 hover:text-white transition-colors flex items-center gap-1.5"
             >
               {link.name}
+              {link.name === "Resume Maker" && (
+                <span className="bg-blue-500 text-[8px] font-bold px-1.5 py-0.5 rounded text-white uppercase tracking-tighter">New</span>
+              )}
             </Link>
           ))}
           <div className="flex items-center gap-4 ml-4 pl-4 border-l border-white/10">
@@ -57,9 +69,13 @@ export function Navbar() {
             <Link href={portfolioData.contact.linkedin} target="_blank" className="text-white/60 hover:text-white">
               <Linkedin size={18} />
             </Link>
-            <button className="px-4 py-2 rounded-full glass border border-blue-500/30 text-blue-400 text-xs font-bold hover:bg-blue-500/10 transition-all uppercase tracking-wider">
-              Connect Wallet
-            </button>
+            {mounted && (
+              <ConnectButton 
+                accountStatus="address"
+                showBalance={false}
+                chainStatus="icon"
+              />
+            )}
           </div>
         </div>
 
@@ -85,10 +101,13 @@ export function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-lg font-medium text-white/70 hover:text-white"
+                className="text-lg font-medium text-white/70 hover:text-white flex items-center justify-between group"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                {link.name}
+                <span>{link.name}</span>
+                {link.name === "Resume Maker" && (
+                  <span className="bg-blue-500 text-[10px] font-bold px-2 py-0.5 rounded text-white uppercase tracking-tighter">New</span>
+                )}
               </Link>
             ))}
           </motion.div>

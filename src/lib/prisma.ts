@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'; // Triggers TS Server refresh
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 

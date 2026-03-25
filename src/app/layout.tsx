@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+
+if (typeof window === "undefined") {
+  (global as any).localStorage = {
+    getItem: () => null,
+    setItem: () => {},
+    removeItem: () => {},
+    clear: () => {},
+    key: () => null,
+    length: 0,
+  };
+}
+
 import "./globals.css";
+import "@rainbow-me/rainbowkit/styles.css";
 import { ParticleBackground } from "@/components/ui/ParticleBackground";
 import { VoiceAssistant } from "@/components/ui/VoiceAssistant";
 import { DevTerminal } from "@/components/ui/DevTerminal";
+import { Web3Provider } from "@/components/providers/Web3Provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +44,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-blue-500/30 selection:text-white`}
       >
-        <ParticleBackground />
-        {children}
-        <VoiceAssistant />
-        <DevTerminal />
+        <Web3Provider>
+          <ParticleBackground />
+          {children}
+          <VoiceAssistant />
+          <DevTerminal />
+        </Web3Provider>
       </body>
     </html>
   );

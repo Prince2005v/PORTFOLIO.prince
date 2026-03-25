@@ -103,5 +103,12 @@ export const portfolioData = {
     github: "https://github.com/Prince2005v",
     linkedin: "https://www.linkedin.com/in/prince-verma-0ba4732a6",
     twitter: "https://twitter.com/Prince2005v"
+  },
+  
+  payments: {
+    upi: "8567prince@okaxis",
+    name: "Prince Verma",
+    currency: "INR",
+    resumePrice: 9
   }
 };
